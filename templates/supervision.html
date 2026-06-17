@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe de Supervisión - {{ numero_contrato }}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #000; background: #fff; padding: 10px; }
+  .table-informe { width: 100%; border-collapse: collapse; border: 2px solid #000; }
+  .table-informe th, .table-informe td { border: 1px solid #000; padding: 3px 6px; vertical-align: middle; }
+  .label { font-weight: bold; }
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }
+  .text-justify { text-align: justify; }
+  .border-bottom-thick { border-bottom: 2px solid #000 !important; }
+  .border-top-thick { border-top: 2px solid #000 !important; }
+  .header-blue { background-color: #a2c8ec !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-weight: bold; text-align: center; font-size: 13px; }
+  .bg-light { background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .flex-between { display: flex; justify-content: space-between; width: 100%; }
+  .table-nested { width: 100%; height: 100%; border-collapse: collapse; }
+  .table-nested td { border: none; border-right: 1px solid #000; padding: 3px 6px; }
+  .table-nested td:last-child { border-right: none; }
+  .uppercase { text-transform: uppercase; }
+  .font-bold { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<table class="table-informe">
+  <colgroup><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"></colgroup>
+
+  <tr class="border-bottom-thick">
+    <td style="text-align:center;padding:5px;background:#fff;"><span style="font-size:14px;font-weight:bold;">ESE NORTE 3</span></td>
+    <td colspan="3" class="header-blue">FORMATO UNICO INFORME DE SUPERVISION CONTRATOS - CONVENIOS Y CERTIFICACION DE PAGOS</td>
+  </tr>
+
+  <tr>
+    <th rowspan="2" class="label text-center">TIPO DE INFORME</th>
+    <th rowspan="2" class="label text-center">No. DE CONTRATO</th>
+    <th colspan="2" class="label text-center" style="border-bottom:1px solid #000;">PERIODO DEL INFORME</th>
+  </tr>
+  <tr>
+    <th class="label text-center">DESDE</th>
+    <th class="label text-center">HASTA</th>
+  </tr>
+
+  <tr class="border-bottom-thick">
+    <td style="padding:0;vertical-align:top;">
+      <table class="table-nested"><tr>
+        <td class="label" style="width:35%;">PARCIAL</td>
+        <td class="label text-center" style="width:15%;">{% if tipo_informe.upper() == 'PARCIAL' %}X{% else %}&nbsp;{% endif %}</td>
+        <td class="label" style="width:35%;">FINAL</td>
+        <td class="label text-center" style="width:15%;">{% if tipo_informe.upper() == 'FINAL' %}X{% else %}&nbsp;{% endif %}</td>
+      </tr></table>
+    </td>
+    <td class="text-center font-bold">{{ numero_contrato }}</td>
+    <td class="text-center">{{ periodo_desde }}</td>
+    <td class="text-center">{{ periodo_hasta }}</td>
+  </tr>
+
+  <tr><td class="label">CONTRATANTE</td><td colspan="3" class="uppercase">E.S.E. NORTE 3</td></tr>
+  <tr class="border-bottom-thick"><td class="label">CONTRATISTA</td><td colspan="3" class="uppercase">{{ contratista }}</td></tr>
+
+  <tr>
+    <td class="label">No. DE IDENTIFICACIÓN</td><td>{{ identificacion }}</td>
+    <td class="label">EXPEDIDA EN</td><td class="uppercase">{{ expedida_en }}</td>
+  </tr>
+  <tr><td class="label">No. TELÉFONO y/o CELULAR</td><td colspan="3">{{ telefono }}</td></tr>
+  <tr class="border-bottom-thick"><td class="label">DIRECCION</td><td colspan="3" class="uppercase">{{ direccion }}</td></tr>
+
+  <tr>
+    <td class="label">TIPO DE PERSONA</td>
+    <td style="padding:0;">
+      <table class="table-nested"><tr>
+        <td class="label" style="width:70%;">JURIDICA</td>
+        <td class="label text-center" style="width:30%;">{% if tipo_persona.upper() == 'JURIDICA' %}X{% else %}&nbsp;{% endif %}</td>
+      </tr></table>
+    </td>
+    <td class="label">NATURAL</td>
+    <td class="label text-center">{% if tipo_persona.upper() == 'NATURAL' %}X{% else %}&nbsp;{% endif %}</td>
+  </tr>
+
+  <tr class="border-bottom-thick"><td class="label">ACTIVIDAD IICA - CODIGO CIIU:</td><td colspan="3">-</td></tr>
+  <tr><td class="label">SUPERVISOR</td><td colspan="3" class="uppercase">{{ supervisor }}</td></tr>
+  <tr class="border-bottom-thick"><td class="label">NIVEL PROFESIONAL</td><td class="uppercase">UNIVERSITARIO</td><td class="uppercase">DESPACHO</td><td class="uppercase">COORDINACION</td></tr>
+  <tr><td class="label">INTERVENTOR</td><td colspan="3" class="uppercase">-</td></tr>
+  <tr class="border-bottom-thick"><td class="label">NIVEL PROFESIONAL</td><td class="uppercase">-</td><td class="uppercase">-</td><td class="uppercase">-</td></tr>
+
+  <tr><td class="label">CDP No.</td><td class="text-right">-</td><td class="label">CRP No.</td><td class="text-right">-</td></tr>
+  <tr><td class="label">IMPUTACIÓN PRESUPUESTAL</td><td>-</td><td class="label">VALOR TOTAL DEL CONTRATO</td><td class="text-right">$ {{ "{:,.0f}".format(valor_total|float).replace(',', '.') }}</td></tr>
+  <tr><td class="label">FECHA DE INICIO DEL<br>CONTRATO</td><td>-</td><td class="label">FECHA TERMINACION DEL CONTRATO</td><td class="text-right">-</td></tr>
+  <tr class="border-bottom-thick"><td class="label">TIEMPO DE ADICION DE<br>CONTRATO</td><td>-</td><td class="label">VALOR FINAL DEL CONTRATO</td><td class="text-right">$ {{ "{:,.0f}".format(valor_final|float).replace(',', '.') }}</td></tr>
+
+  <tr class="border-top-thick">
+    <td class="label">FORMA DE PAGO</td>
+    <td colspan="2" class="text-justify" style="padding:10px;">-</td>
+    <td style="padding:0;vertical-align:top;">
+      <table class="table-nested" style="border-right:none;">
+        <tr><td class="label text-center" style="border-bottom:1px solid #000;height:35px;">PAGO No</td></tr>
+        <tr><td class="label text-center" style="height:100px;font-size:14px;border-bottom:none;">{{ numero_pago }}</td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr class="border-top-thick"><td class="label" colspan="3">VALOR A PAGAR</td><td class="text-right">$ {{ "{:,.0f}".format(valor_a_pagar|float).replace(',', '.') }}</td></tr>
+  <tr><td class="label" colspan="3">OTRO SI</td><td class="text-right">$ {{ "{:,.0f}".format(otro_si|float).replace(',', '.') }}</td></tr>
+  <tr><td class="label" colspan="3">VALOR PAGADO</td><td class="text-right">$ {{ "{:,.0f}".format(valor_a_pagar|float).replace(',', '.') }}</td></tr>
+  <tr class="border-bottom-thick"><td class="label" colspan="3">SALDO A PAGAR</td><td class="text-right">$ {{ "{:,.0f}".format(saldo_a_pagar|float).replace(',', '.') }}</td></tr>
+
+  <tr><td colspan="4" class="text-center bg-light" style="padding:6px;"><div class="label">PAGO SEGURIDAD SOCIAL</div><div class="label" style="margin-top:2px;">Se anexa el pago de la seguridad social.</div></td></tr>
+
+  <tr class="border-bottom-thick border-top-thick">
+    <td class="label">IBC al sistema de Seguridad<br>Social (40% del Ingreso<br>mensual)</td>
+    <td class="label"><div class="flex-between"><span>$</span><span>{{ "{:,.0f}".format(ibc|float).replace(',', '.') }}</span></div></td>
+    <td class="label">PERIODO COTIZADO</td>
+    <td class="text-right">{{ periodo_desde }} al {{ periodo_hasta }}</td>
+  </tr>
+
+  <tr><td class="label">EPS</td><td class="uppercase">{{ eps_nombre }}</td><td class="label">VALOR PAGADO</td><td><div class="flex-between"><span>$</span><span>{{ "{:,.0f}".format(eps_valor|float).replace(',', '.') }}</span></div></td></tr>
+  <tr><td class="label">ARL</td><td class="uppercase">{{ arl_nombre }}</td><td class="label">VALOR PAGADO</td><td><div class="flex-between"><span>$</span><span>{{ "{:,.0f}".format(arl_valor|float).replace(',', '.') }}</span></div></td></tr>
+  <tr><td class="label">SENA</td><td></td><td class="label">VALOR PAGADO</td><td><div class="flex-between"><span>$</span><span>0</span></div></td></tr>
+  <tr><td class="label">ICBF</td><td></td><td class="label">VALOR PAGADO</td><td><div class="flex-between"><span>$</span><span>0</span></div></td></tr>
+  <tr><td class="label">CCF</td><td>{{ ccf_nombre }}</td><td class="label">VALOR PAGADO</td><td><div class="flex-between"><span>$</span><span>{{ "{:,.0f}".format(ccf_valor|float).replace(',', '.') }}</span></div></td></tr>
+  <tr><td class="label">AFP</td><td class="uppercase">{{ afp_nombre }}</td><td class="label">VALOR PAGADO</td><td><div class="flex-between"><span>$</span><span>{{ "{:,.0f}".format(afp_valor|float).replace(',', '.') }}</span></div></td></tr>
+
+  <tr class="border-top-thick">
+    <td class="label">VALOR TOTAL PLANILLA</td>
+    <td class="label"><div class="flex-between"><span>$</span><span>{{ "{:,.0f}".format(total_planilla|float).replace(',', '.') }}</span></div></td>
+    <td class="label">PLANILLA No.</td>
+    <td class="text-right">-</td>
+  </tr>
+
+  <tr class="border-bottom-thick border-top-thick">
+    <td colspan="2" class="label">ANEXA CERTIFICACION PARA ASIMILARSE A ASALARIADO<br>(Retefuente)</td>
+    <td colspan="2" style="padding:0;">
+      <table class="table-nested" style="border-right:none;height:100%;"><tr>
+        <td class="label text-center" style="width:15%;">SI</td>
+        <td class="label text-center" style="width:35%;">X</td>
+        <td class="label text-center" style="width:15%;">NO</td>
+        <td class="label text-center" style="width:35%;border-right:none;">&nbsp;</td>
+      </tr></table>
+    </td>
+  </tr>
+</table>
+
+<table class="table-informe" style="margin-top:-2px;">
+  <colgroup><col style="width:8%;"><col style="width:72%;"><col style="width:10%;"><col style="width:10%;"></colgroup>
+  <tr><td colspan="4" class="label text-center bg-light">OBJETO DEL CONTRATO</td></tr>
+  <tr class="border-bottom-thick"><td colspan="4" class="text-center uppercase" style="padding:10px;">{{ objeto_contrato }}</td></tr>
+  <tr><td colspan="4" class="label text-center bg-light">DESCRIPCION DE ACTIVIDADES REALIZADAS</td></tr>
+  <tr><td class="label text-center">No.</td><td class="label text-center">ACTIVIDAD</td><td class="label text-center">CUMPLE</td><td class="label text-center">NO CUMPLE</td></tr>
+
+  {% for actividad in actividades %}
+  <tr>
+    <td class="text-center">{{ loop.index }}</td>
+    <td style="padding:8px;text-align:justify;">{{ actividad }}</td>
+    <td class="label text-center" style="font-size:14px;">X</td>
+    <td class="label text-center" style="font-size:14px;">&nbsp;</td>
+  </tr>
+  {% endfor %}
+
+  <tr class="border-top-thick"><td colspan="4" class="label text-center bg-light">OBSERVACIONES</td></tr>
+  <tr class="border-bottom-thick"><td colspan="4" style="padding:10px;text-align:justify;white-space:pre-line;">{{ observaciones }}</td></tr>
+  <tr><td colspan="3" class="label text-center bg-light border-bottom-thick">DOCUMENTOS ANEXOS</td><td class="label text-center bg-light border-bottom-thick">No. FOLIOS, CD'S, DVD'S</td></tr>
+  <tr class="border-bottom-thick">
+    <td colspan="3" style="padding:6px;">{{ anexos }}</td>
+    <td class="label text-center" style="vertical-align:middle;font-size:14px;">{{ folios }}</td>
+  </tr>
+</table>
+
+<table class="table-informe" style="margin-top:-2px;page-break-inside:avoid;">
+  <colgroup><col style="width:50%;"><col style="width:50%;"></colgroup>
+  <tr><td colspan="2" class="text-center" style="padding:8px;">Dado en el municipio de Puerto Tejada - Cauca, a los {{ dia }} dias del mes de {{ mes }} de {{ anio }}</td></tr>
+  <tr><td class="label uppercase" style="height:60px;vertical-align:bottom;padding-bottom:5px;">FIRMA SUPERVISOR</td><td class="text-center uppercase font-bold" style="vertical-align:bottom;padding-bottom:5px;">{{ supervisor }}</td></tr>
+  <tr><td class="label uppercase" style="height:60px;vertical-align:bottom;padding-bottom:5px;">FIRMA CONTRATISTA</td><td class="text-center uppercase font-bold" style="vertical-align:bottom;padding-bottom:5px;">{{ contratista }}</td></tr>
+</table>
+
+<div style="margin-top:10px;font-size:8px;text-align:center;color:#888;">Documento generado por NexoSalud - Sistema de Gestion EBS</div>
+</body>
+</html>
