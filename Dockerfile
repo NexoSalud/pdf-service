@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0t64 libdbus-1-3 \
     libatk1.0-0t64 libatk-bridge2.0-0t64 \
     libx11-6 libxcb1 libxext6 \
-    fonts-dejavu-core fonts-liberation \
+    libfontconfig1 \
+    fonts-dejavu-core fonts-liberation fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies

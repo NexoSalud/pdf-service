@@ -76,7 +76,10 @@ async def prewarm():
     log.info("Pre-warming Playwright...")
     try:
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
+            browser = await p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-setuid-sandbox", "--no-zygote"]
+            )
             page = await browser.new_page()
             await page.set_content("<html><body><p>Prewarm</p></body></html>")
             await page.wait_for_load_state("networkidle")
@@ -89,6 +92,8 @@ async def prewarm():
 # ============================================================
 # HELPER
 # ============================================================
+
+import tempfile
 
 def fmt(val):
     """Formatea numero con separadores de miles (formato colombiano)"""
@@ -145,23 +150,47 @@ async def generate_pdf(data: dict) -> bytes:
         return html.encode("utf-8")
 
     # Generar PDF con Playwright Async API
+    # Usamos archivo temporal + page.goto() en vez de set_content()
+    # porque goto() carga CSS y fuentes correctamente en Docker headless
     try:
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
-            page = await browser.new_page()
-            await page.set_content(html)
-            await page.wait_for_load_state("networkidle")
-            await page.wait_for_timeout(500)
-            pdf = await page.pdf(
-                format="Letter",
-                print_background=True,
-                margin={"top": "0.3in", "right": "0.3in", "bottom": "0.3in", "left": "0.3in"}
+            browser = await p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-setuid-sandbox", "--font-render-hinting=none"]
             )
+            page = await browser.new_page()
+            # Escribir HTML a archivo temporal y navegar a el
+            with tempfile.NamedTemporaryFile(
+                suffix=".html", mode="w", delete=False, encoding="utf-8"
+            ) as f:
+                f.write(html)
+                temp_path = f.name
+            log.debug(f"HTML tempfile: {temp_path} ({len(html)} chars)")
+            try:
+                await page.goto(f"file://{temp_path}", wait_until="networkidle")
+                await page.wait_for_timeout(1000)
+                # Verificar que la pagina tenga contenido visible
+                text_content = await page.evaluate("() => document.body.innerText")
+                if text_content and text_content.strip():
+                    log.debug(f"Contenido de pagina: {len(text_content.strip())} chars")
+                else:
+                    log.warning("Pagina sin contenido visible!")
+                pdf = await page.pdf(
+                    format="Letter",
+                    print_background=True,
+                    margin={"top": "0.3in", "right": "0.3in", "bottom": "0.3in", "left": "0.3in"}
+                )
+            finally:
+                try:
+                    os.unlink(temp_path)
+                except:
+                    pass
             await browser.close()
             log.info(f"PDF generado: {len(pdf)} bytes")
             return pdf
     except Exception as e:
-        log.warning(f"Playwright fallo, sirviendo HTML: {e}")
+        log.error(f"Playwright fallo: {e}", exc_info=True)
+        log.warning("Sirviendo HTML como fallback")
         return html.encode("utf-8")
 
 # ============================================================
