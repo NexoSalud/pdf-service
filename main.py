@@ -58,6 +58,9 @@ class SupervisionPDFRequest(BaseModel):
     folios: str = ""
     actividades: str = ""
     observaciones: str = ""
+    objeto_contrato: str = "-"
+    anexos: str = "-"
+    fecha_firma: str = ""
     formato: str = "pdf"  # "pdf" o "html"
 
 class HealthResponse(BaseModel):
